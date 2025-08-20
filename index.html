@@ -14,7 +14,7 @@
       overflow: hidden;
     }
 
-    /* หัวใจลอย */
+    /* floating hearts */
     .heart {
       position: absolute;
       width: 20px;
@@ -47,7 +47,7 @@
     }
     @keyframes blink { 0%,50%{opacity:1;} 51%,100%{opacity:0;} }
 
-    /* หัวใจคลิก */
+    /* click hearts */
     .click-heart {
       position: absolute;
       width: 15px;
@@ -68,8 +68,18 @@
     .click-heart:after { left: -7.5px; top: 0; }
     @keyframes float-click { 0%{transform:translateY(0) rotate(45deg);opacity:1;}100%{transform:translateY(-80px) rotate(45deg);opacity:0;} }
 
-    /* โน้ตกระดาษพับ */
+    /* secret container */
+    #secret {
+      position: relative; /* เพื่อให้โน้ต absolute อยู่ภายใน */
+      margin-top: 20px;
+    }
+
+    /* note paper */
     #notePaper {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
       background: #fff9c4;
       color: #d6336c;
       padding: 16px;
@@ -79,19 +89,42 @@
       text-align: left;
       font-style: italic;
       opacity: 0;
-      margin: 0 auto 16px auto;
+      z-index: 10;
     }
 
     @keyframes floatNote {
-      0% { transform: translateY(0) rotate(-5deg); opacity: 1; }
-      100% { transform: translateY(-220px) rotate(5deg); opacity: 1; }
+      0% { transform: translate(-50%, 0) rotate(-5deg); opacity: 1; }
+      100% { transform: translate(-50%, -220px) rotate(5deg); opacity: 1; }
     }
 
-    .float-note {
-      animation: floatNote 7s ease-in-out forwards;
+    .float-note { animation: floatNote 7s ease-in-out forwards; }
+
+    /* show note button */
+    #showNoteBtn {
+      position: relative;
+      z-index: 30;
+      display: none;
+      margin-top: 10px;
     }
 
-    /* ปุ่มเพลง */
+    /* next button */
+    #nextBtn {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      display: none;
+      background: #9b5de5;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    /* music button */
     #musicToggle {
       position: fixed;
       top: 20px;
@@ -130,7 +163,7 @@
     love u na babe 💌
   </button>
 
-  <div id="secret" class="hidden mt-6 relative">
+  <div id="secret" class="hidden relative mt-6">
     <img id="surpriseImg"
       src="https://www.dropbox.com/scl/fi/xfx46q45r1zc35rrnlye5/B8610CD0-5B3B-4FAE-AD13-3E672B75920B.JPG?rlkey=8ru0amjaelsizj5ggsr9gz8t1&st=y9sroip4&raw=1"
       alt="cute"
@@ -139,8 +172,7 @@
     <p id="typingSecret" class="text-white text-xl mb-4"></p>
 
     <!-- ปุ่มโชว์โน้ต -->
-    <button id="showNoteBtn" 
-            class="hidden mt-4 bg-yellow-200 text-pink-700 px-4 py-2 rounded-full shadow-lg hover:bg-yellow-300 transition">
+    <button id="showNoteBtn" class="bg-yellow-200 text-pink-700 px-4 py-2 rounded-full shadow-lg hover:bg-yellow-300 transition">
       เปิดโน้ต 🌹
     </button>
 
@@ -151,11 +183,8 @@
       ปล. เค้าแค่หาซื้อไม่ได้เวลานั้น หวังว่าเธอจะชอบน้าาา 💌
     </div>
 
-    <!-- ปุ่มลิงก์ไป secret.html ปรับ margin-top ใกล้โน้ต -->
-    <a id="nextBtn" href="secret.html" 
-       class="hidden mt-2 inline-block bg-purple-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-purple-600 transition">
-      Go to Secret Page 💖
-    </a>
+    <!-- ปุ่มลิงก์ไป secret.html -->
+    <a id="nextBtn" href="secret.html">Go to Secret Page 💖</a>
   </div>
 
   <script>
@@ -215,26 +244,27 @@
 
     // Show secret
     function showSecret(){
-      document.getElementById('secret').classList.remove('hidden');
-      const showNoteBtn = document.getElementById("showNoteBtn");
-      showNoteBtn.classList.remove("hidden");
+      const secret = document.getElementById('secret');
+      secret.classList.remove('hidden');
 
-      // ซ่อนปุ่ม Go to Secret Page ก่อน
-      const nextBtn = document.getElementById('nextBtn');
-      nextBtn.classList.add('hidden');
+      const showNoteBtn = document.getElementById("showNoteBtn");
+      showNoteBtn.style.display = "inline-block"; // กดได้
+      showNoteBtn.style.zIndex = 30;               // อยู่เหนือโน้ต
+
+      document.getElementById('nextBtn').style.display = "none";
     }
 
     // Show note button click
     document.getElementById("showNoteBtn").addEventListener("click", ()=>{
       const note = document.getElementById("notePaper");
       note.classList.add("float-note");
-      document.getElementById("showNoteBtn").classList.add("hidden");
+      note.style.opacity = 1;
+      document.getElementById("showNoteBtn").style.display = "none";
 
-      // หลัง 7 วิ โน้ตหายแล้วค่อยโชว์ปุ่ม Go to Secret Page
       setTimeout(()=>{
         note.classList.remove("float-note");
         note.style.opacity = 0;
-        document.getElementById('nextBtn').classList.remove('hidden');
+        document.getElementById('nextBtn').style.display = "block";
       },7000);
     });
   </script>
