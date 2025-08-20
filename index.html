@@ -1,290 +1,192 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>To my love</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Itim', cursive; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To my love</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Itim', cursive; background: linear-gradient(to bottom right, #fbc2eb, #a6c1ee); overflow: hidden; }
 
-    body {
-      background: linear-gradient(to bottom right, #fbc2eb, #a6c1ee);
-      overflow: hidden;
-    }
+.heart {
+  position: absolute; width: 20px; height: 20px; background: red; transform: rotate(45deg);
+  animation: float 6s infinite ease-in;
+}
+.heart:before, .heart:after {
+  content: ""; position: absolute; width: 20px; height: 20px; background: red; border-radius: 50%;
+}
+.heart:before { top: -10px; left:0;}
+.heart:after { left:-10px; top:0;}
+@keyframes float { from{transform:translateY(100vh) rotate(45deg);opacity:1;} to{transform:translateY(-10vh) rotate(45deg);opacity:0;} }
 
-    /* floating hearts */
-    .heart {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: red;
-      transform: rotate(45deg);
-      animation: float 6s infinite ease-in;
-    }
-    .heart:before, .heart:after {
-      content: "";
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: red;
-      border-radius: 50%;
-    }
-    .heart:before { top: -10px; left: 0; }
-    .heart:after { left: -10px; top: 0; }
-    @keyframes float {
-      from { transform: translateY(100vh) rotate(45deg); opacity: 1; }
-      to { transform: translateY(-10vh) rotate(45deg); opacity: 0; }
-    }
+.cursor { display:inline-block; width:3px; background:pink; margin-left:2px; animation:blink 0.8s infinite; }
+@keyframes blink {0%,50%{opacity:1;}51%,100%{opacity:0;}}
 
-    .cursor {
-      display: inline-block;
-      width: 3px;
-      background-color: pink;
-      margin-left: 2px;
-      animation: blink 0.8s infinite;
-    }
-    @keyframes blink { 0%,50%{opacity:1;} 51%,100%{opacity:0;} }
+.click-heart { position:absolute; width:15px; height:15px; background:red; transform:rotate(45deg); animation: float-click 1s ease-out forwards;}
+.click-heart:before, .click-heart:after { content:""; position:absolute; width:15px; height:15px; background:red; border-radius:50%; }
+.click-heart:before{top:-7.5px; left:0;} .click-heart:after{left:-7.5px; top:0;}
+@keyframes float-click{0%{transform:translateY(0) rotate(45deg);opacity:1;}100%{transform:translateY(-80px) rotate(45deg);opacity:0;}}
 
-    /* click hearts */
-    .click-heart {
-      position: absolute;
-      width: 15px;
-      height: 15px;
-      background: red;
-      transform: rotate(45deg);
-      animation: float-click 1s ease-out forwards;
-    }
-    .click-heart:before, .click-heart:after {
-      content: "";
-      position: absolute;
-      width: 15px;
-      height: 15px;
-      background: red;
-      border-radius: 50%;
-    }
-    .click-heart:before { top: -7.5px; left: 0; }
-    .click-heart:after { left: -7.5px; top: 0; }
-    @keyframes float-click { 0%{transform:translateY(0) rotate(45deg);opacity:1;}100%{transform:translateY(-80px) rotate(45deg);opacity:0;} }
+#secret{position:relative; margin-top:20px; opacity:0; transform: translateY(20px); transition: all 0.7s ease-out;}
+#secret.show{opacity:1; transform: translateY(0);}
+#musicToggle{position:fixed;top:20px;right:20px;background:#fff3;border:none;font-size:24px;cursor:pointer;padding:10px;border-radius:50%;backdrop-filter:blur(4px);transition:.2s;}
+#musicToggle:hover{background:#fff6;transform:scale(1.1);}
+#nextBtn{margin-top:16px; display:none; background:#9b5de5; color:white; padding:10px 16px; border-radius:12px; box-shadow:0 4px 8px rgba(0,0,0,0.2); text-decoration:none; font-weight:bold;}
 
-    /* secret container */
-    #secret {
-      position: relative; /* เพื่อให้โน้ต absolute อยู่ภายใน */
-      margin-top: 20px;
-    }
-
-    /* note paper */
-    #notePaper {
-      position: absolute;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #fff9c4;
-      color: #d6336c;
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-      max-width: 300px;
-      text-align: left;
-      font-style: italic;
-      opacity: 0;
-      z-index: 10;
-    }
-
-    @keyframes floatNote {
-      0% { transform: translate(-50%, 0) rotate(-5deg); opacity: 1; }
-      100% { transform: translate(-50%, -220px) rotate(5deg); opacity: 1; }
-    }
-
-    .float-note { animation: floatNote 7s ease-in-out forwards; }
-
-    /* show note button */
-    #showNoteBtn {
-      position: relative;
-      z-index: 30;
-      display: none;
-      margin-top: 10px;
-    }
-
-    /* next button */
-    #nextBtn {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 20;
-      display: none;
-      background: #9b5de5;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    /* music button */
-    #musicToggle {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #fff3;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      padding: 10px;
-      border-radius: 50%;
-      backdrop-filter: blur(4px);
-      transition: 0.2s;
-    }
-    #musicToggle:hover { background: #fff6; transform: scale(1.1); }
-  </style>
+/* Modal โน้ต */
+#noteModal{position:fixed; inset:0; background: rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:50;}
+#noteModal.hidden{display:none;}
+#noteModal .modalContent{background:white; border-radius:2xl; padding:24px; max-width:300px; width:90%; position:relative;}
+#noteModal .closeBtn{position:absolute; top:8px; right:8px; font-size:20px; font-weight:bold; color:red; cursor:pointer;}
+</style>
 </head>
 <body class="flex flex-col items-center justify-center h-screen text-center px-4">
 
-  <!-- floating hearts -->
-  <script>
-    for(let i=0;i<15;i++){
-      let heart=document.createElement("div");
-      heart.className="heart";
-      heart.style.left=Math.random()*100+"vw";
-      heart.style.animationDuration=(4+Math.random()*4)+"s";
-      heart.style.opacity=Math.random();
-      document.body.appendChild(heart);
-    }
-  </script>
+<!-- Floating Hearts -->
+<script>
+for(let i=0;i<15;i++){
+  let heart=document.createElement("div");
+  heart.className="heart";
+  heart.style.left=Math.random()*100+"vw";
+  heart.style.animationDuration=(4+Math.random()*4)+"s";
+  heart.style.opacity=Math.random();
+  document.body.appendChild(heart);
+}
+</script>
 
-  <!-- main content -->
-  <h1 id="typingHeader" class="text-2xl font-bold text-white mb-6"></h1>
-  <p class="text-white text-lg">🎉 ได้เจอกันแล้ววววว 🎉 </p>
+<h1 id="typingHeader" class="text-2xl font-bold text-white mb-6"></h1>
+<p class="text-white text-lg">🎉 ได้เจอกันแล้ววววว 🎉 </p>
 
-  <button id="loveBtn" class="mt-6 bg-pink-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-pink-600 transition" onclick="showSecret()">
-    love u na babe 💌
+<button id="loveBtn" class="mt-6 bg-pink-500 text-white px-4 py-2 rounded-full shadow-lg hover:bg-pink-600 transition">
+  love u na babe 💌
+</button>
+
+<div id="secret">
+  <!-- ปุ่มเปิดโน้ต -->
+  <button id="openNoteBtn" class="mb-4 bg-yellow-200 text-pink-700 px-4 py-2 rounded-full shadow-lg hover:bg-yellow-300 transition">
+    เปิดโน้ต 🌹
   </button>
 
-  <div id="secret" class="hidden relative mt-6">
-    <img id="surpriseImg"
-      src="https://www.dropbox.com/scl/fi/xfx46q45r1zc35rrnlye5/B8610CD0-5B3B-4FAE-AD13-3E672B75920B.JPG?rlkey=8ru0amjaelsizj5ggsr9gz8t1&st=y9sroip4&raw=1"
-      alt="cute"
-      class="rounded-2xl shadow-lg w-40 mx-auto mb-4 cursor-pointer"
-    >
-    <p id="typingSecret" class="text-white text-xl mb-4"></p>
-
-    <!-- ปุ่มโชว์โน้ต -->
-    <button id="showNoteBtn" class="bg-yellow-200 text-pink-700 px-4 py-2 rounded-full shadow-lg hover:bg-yellow-300 transition">
-      เปิดโน้ต 🌹
-    </button>
-
-    <!-- โน้ตกระดาษพับ -->
-    <div id="notePaper">
-      🌹 ดอกกุหลาบดอกนี้อาจจะไม่ใช่ดอกจริงแต่มีกลิ่นนะ<br>
-      อยากให้ได้กลิ่นแล้วคิดถึงเค้าครับ<br>
-      ปล. เค้าแค่หาซื้อไม่ได้เวลานั้น หวังว่าเธอจะชอบน้าาา 💌
+  <!-- Modal โน้ต -->
+  <div id="noteModal" class="hidden">
+    <div class="modalContent">
+      <button id="closeNoteBtn" class="closeBtn">✕</button>
+      <p class="text-pink-700 text-lg">
+        🌹 ดอกกุหลาบดอกนี้อาจจะไม่ใช่ดอกจริงแต่เต็มไปด้วยความตั้งใจนะ<br>
+        อยากให้ได้กลิ่นแล้วคิดถึงเค้าครับ<br>
+        ปล. หวังว่าเธอจะชอบน้าาา 💌
+      </p>
     </div>
-
-    <!-- ปุ่มลิงก์ไป secret.html -->
-    <a id="nextBtn" href="secret.html">Go to Secret Page 💖</a>
   </div>
 
-  <script>
-    // Typewriter Effect
-    function typeWriterEffect(elementId,texts,speed=150,delay=1000){
-      const el=document.getElementById(elementId);
-      let textIndex=0,charIndex=0,isDeleting=false;
-      const cursor=document.createElement("span");
-      cursor.className="cursor";
-      el.after(cursor);
+  <!-- รูป surprise -->
+  <img id="surpriseImg" src="https://www.dropbox.com/scl/fi/xfx46q45r1zc35rrnlye5/B8610CD0-5B3B-4FAE-AD13-3E672B75920B.JPG?rlkey=8ru0amjaelsizj5ggsr9gz8t1&st=y9sroip4&raw=1"
+    alt="cute" class="rounded-2xl shadow-lg w-40 mx-auto mb-4 cursor-pointer">
 
-      function type(){
-        const currentText=texts[textIndex];
-        if(!isDeleting){
-          el.textContent=currentText.substring(0,charIndex+1);
-          charIndex++;
-          if(charIndex===currentText.length){setTimeout(()=>isDeleting=true,delay);}
-        }else{
-          el.textContent=currentText.substring(0,charIndex-1);
-          charIndex--;
-          if(charIndex===0){isDeleting=false;textIndex=(textIndex+1)%texts.length;}
-        }
-        let typingSpeed=isDeleting?speed/2:speed;
-        setTimeout(type,typingSpeed);
-      }
-      type();
+  <p id="typingSecret" class="text-white text-xl mb-4"></p>
+
+  <!-- Go to Secret Page -->
+  <a id="nextBtn" href="secret.html">Go to Secret Page 💖</a>
+</div>
+
+<script>
+// Typewriter
+function typeWriterEffect(elementId,texts,speed=150,delay=1000){
+  const el=document.getElementById(elementId);
+  let textIndex=0,charIndex=0,isDeleting=false;
+  const cursor=document.createElement("span");
+  cursor.className="cursor";
+  el.after(cursor);
+  function type(){
+    const currentText=texts[textIndex];
+    if(!isDeleting){
+      el.textContent=currentText.substring(0,charIndex+1);
+      charIndex++;
+      if(charIndex===currentText.length){setTimeout(()=>isDeleting=true,delay);}
+    }else{
+      el.textContent=currentText.substring(0,charIndex-1);
+      charIndex--;
+      if(charIndex===0){isDeleting=false;textIndex=(textIndex+1)%texts.length;}
     }
-    typeWriterEffect("typingHeader",["ถึงคนที่ต้ารักที่สุด 💕","To my love 💖"],250,1500);
-    typeWriterEffect("typingSecret",["รักเธอนะ 💖","คิดถึงมากเท่าโลก 🌎","My One and Only. 🥺","I love you to the moon and back. 🌙"],150,1000);
+    let typingSpeed=isDeleting?speed/2:speed;
+    setTimeout(type,typingSpeed);
+  }
+  type();
+}
+typeWriterEffect("typingHeader",["ถึงคนที่ต้ารักที่สุด 💕","To my love 💖"],250,1500);
+typeWriterEffect("typingSecret",["รักเธอนะ 💖","คิดถึงมากเท่าโลก 🌎","My One and Only. 🥺","I love you to the moon and back. 🌙"],150,1000);
 
-    // Interactive Image Effect
-    const img=document.getElementById("surpriseImg");
-    const images=[
-      "https://www.dropbox.com/scl/fi/3athp4wsgg7zavhuj6e3y/4EAD4311-549E-4B5A-8966-ADD54A6DA6A8.JPG?rlkey=vgn03xbakzcpsn6dnjczg2j2y&st=fm73n0sv&raw=1",
-      "https://www.dropbox.com/scl/fi/whx3ksjzhfyvp39jn26sd/IMG_3193.JPG?rlkey=y9beby70n0cjbn63pw28wpk7y&st=7jx11go6&raw=1",
-      "https://www.dropbox.com/scl/fi/oa20zxiw3y5fh7nk1z5u9/7B91CF55-19C2-4848-8FB6-6682BD580591.JPG?rlkey=mcdjt1fn0hmp91e8v5rfta1ts&st=d3uuwwg9&raw=1",
-      "https://www.dropbox.com/scl/fi/3xkzquiw3cod38w4zrdih/IMG_3621.JPG?rlkey=d48yeyljc3ds94m51f6mf8ysl&st=91ophrns&raw=1"
-    ];
-    let currentIndex=0;
-    img.addEventListener("click",()=>{
-      img.style.transition="transform 0.3s";
-      img.style.transform="scale(1.3)";
-      setTimeout(()=>img.style.transform="scale(1)",300);
+// Interactive image
+const img=document.getElementById("surpriseImg");
+const images=[
+  "https://www.dropbox.com/scl/fi/3athp4wsgg7zavhuj6e3y/4EAD4311-549E-4B5A-8966-ADD54A6DA6A8.JPG?rlkey=vgn03xbakzcpsn6dnjczg2j2y&st=fm73n0sv&raw=1",
+  "https://www.dropbox.com/scl/fi/whx3ksjzhfyvp39jn26sd/IMG_3193.JPG?rlkey=y9beby70n0cjbn63pw28wpk7y&st=7jx11go6&raw=1",
+  "https://www.dropbox.com/scl/fi/oa20zxiw3y5fh7nk1z5u9/7B91CF55-19C2-4848-8FB6-6682BD580591.JPG?rlkey=mcdjt1fn0hmp91e8v5rfta1ts&st=d3uuwwg9&raw=1",
+  "https://www.dropbox.com/scl/fi/3xkzquiw3cod38w4zrdih/IMG_3621.JPG?rlkey=d48yeyljc3ds94m51f6mf8ysl&st=91ophrns&raw=1"
+];
+let currentIndex=0;
+img.addEventListener("click",()=>{
+  img.style.transition="transform 0.3s";
+  img.style.transform="scale(1.3)";
+  setTimeout(()=>img.style.transform="scale(1)",300);
+  for(let i=0;i<5;i++){
+    const heart=document.createElement("div");
+    heart.className="click-heart";
+    heart.style.left=img.offsetLeft+img.offsetWidth/2+(Math.random()*40-20)+"px";
+    heart.style.top=img.offsetTop+img.offsetHeight/2+(Math.random()*40-20)+"px";
+    document.body.appendChild(heart);
+    heart.addEventListener("animationend",()=>heart.remove());
+  }
+  currentIndex=(currentIndex+1)%images.length;
+  img.src=images[currentIndex];
+});
 
-      for(let i=0;i<5;i++){
-        const heart=document.createElement("div");
-        heart.className="click-heart";
-        heart.style.left=img.offsetLeft+img.offsetWidth/2+(Math.random()*40-20)+"px";
-        heart.style.top=img.offsetTop+img.offsetHeight/2+(Math.random()*40-20)+"px";
-        document.body.appendChild(heart);
-        heart.addEventListener("animationend",()=>heart.remove());
-      }
+// Show/hide secret
+const loveBtn=document.getElementById("loveBtn");
+const secret=document.getElementById("secret");
+const nextBtn=document.getElementById("nextBtn");
 
-      currentIndex=(currentIndex+1)%images.length;
-      img.src=images[currentIndex];
-    });
+loveBtn.addEventListener("click",()=>{
+  // toggle secret content
+  if(secret.classList.contains("show")){
+    // ซ่อนกลับ
+    secret.classList.remove("show");
+  } else {
+    // โชว์
+    secret.classList.add("show");
+    // ซ่อน Go to Secret Page ก่อน
+    nextBtn.style.display="none";
+    setTimeout(()=>{ nextBtn.style.display="inline-block"; },8000);
+  }
+});
 
-    // Show secret
-    function showSecret(){
-      const secret = document.getElementById('secret');
-      secret.classList.remove('hidden');
+// Modal โน้ต
+const openNoteBtn=document.getElementById("openNoteBtn");
+const noteModal=document.getElementById("noteModal");
+const closeNoteBtn=document.getElementById("closeNoteBtn");
 
-      const showNoteBtn = document.getElementById("showNoteBtn");
-      showNoteBtn.style.display = "inline-block"; // กดได้
-      showNoteBtn.style.zIndex = 30;               // อยู่เหนือโน้ต
+openNoteBtn.addEventListener("click",()=>noteModal.classList.remove("hidden"));
+closeNoteBtn.addEventListener("click",()=>noteModal.classList.add("hidden"));
+noteModal.addEventListener("click",(e)=>{ if(e.target===noteModal) noteModal.classList.add("hidden"); });
+</script>
 
-      document.getElementById('nextBtn').style.display = "none";
-    }
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg">
+  เบราว์เซอร์ของคุณไม่รองรับการเล่นเสียง
+</audio>
 
-    // Show note button click
-    document.getElementById("showNoteBtn").addEventListener("click", ()=>{
-      const note = document.getElementById("notePaper");
-      note.classList.add("float-note");
-      note.style.opacity = 1;
-      document.getElementById("showNoteBtn").style.display = "none";
-
-      setTimeout(()=>{
-        note.classList.remove("float-note");
-        note.style.opacity = 0;
-        document.getElementById('nextBtn').style.display = "block";
-      },7000);
-    });
-  </script>
-
-  <audio id="bgMusic" loop>
-    <source src="music.mp3" type="audio/mpeg">
-    เบราว์เซอร์ของคุณไม่รองรับการเล่นเสียง
-  </audio>
-
-  <button id="musicToggle">▶️</button>
-  <script>
-    const music=document.getElementById("bgMusic");
-    const toggle=document.getElementById("musicToggle");
-    let playing=false;
-    toggle.addEventListener("click",()=>{
-      if(!playing){music.currentTime=9;music.play();toggle.textContent="🔊";}
-      else{music.pause();toggle.textContent="▶️";}
-      playing=!playing;
-    });
-  </script>
+<button id="musicToggle">▶️</button>
+<script>
+const music=document.getElementById("bgMusic");
+const toggle=document.getElementById("musicToggle");
+let playing=false;
+toggle.addEventListener("click",()=>{
+  if(!playing){music.currentTime=9;music.play();toggle.textContent="🔊";}
+  else{music.pause();toggle.textContent="▶️";}
+  playing=!playing;
+});
+</script>
 
 </body>
 </html>
