@@ -9,15 +9,10 @@
 <style>
 body { font-family: 'Itim', cursive; background: linear-gradient(to bottom right, #fbc2eb, #a6c1ee); overflow: hidden; }
 
-.heart {
-  position: absolute; width: 20px; height: 20px; background: red; transform: rotate(45deg);
-  animation: float 6s infinite ease-in;
-}
-.heart:before, .heart:after {
-  content: ""; position: absolute; width: 20px; height: 20px; background: red; border-radius: 50%;
-}
-.heart:before { top: -10px; left:0;}
-.heart:after { left:-10px; top:0;}
+.heart { position: absolute; width: 20px; height: 20px; background: red; transform: rotate(45deg); animation: float 6s infinite ease-in; }
+.heart:before, .heart:after { content: ""; position: absolute; width: 20px; height: 20px; background: red; border-radius: 50%; }
+.heart:before { top: -10px; left:0; }
+.heart:after { left:-10px; top:0; }
 @keyframes float { from{transform:translateY(100vh) rotate(45deg);opacity:1;} to{transform:translateY(-10vh) rotate(45deg);opacity:0;} }
 
 .cursor { display:inline-block; width:3px; background:pink; margin-left:2px; animation:blink 0.8s infinite; }
@@ -117,19 +112,26 @@ function typeWriterEffect(elementId,texts,speed=150,delay=1000){
 typeWriterEffect("typingHeader",["ถึงคนที่ต้ารักที่สุด 💕","To my love 💖"],250,1500);
 typeWriterEffect("typingSecret",["รักเธอนะ 💖","คิดถึงมากเท่าโลก 🌎","My One and Only. 🥺","I love you to the moon and back. 🌙"],150,1000);
 
-// Interactive image
+// Interactive image (แก้ไขให้เปลี่ยนรูปทันที)
 const img=document.getElementById("surpriseImg");
 const images=[
   "https://www.dropbox.com/scl/fi/3athp4wsgg7zavhuj6e3y/4EAD4311-549E-4B5A-8966-ADD54A6DA6A8.JPG?rlkey=vgn03xbakzcpsn6dnjczg2j2y&st=fm73n0sv&raw=1",
-  "https://www.dropbox.com/scl/fi/whx3ksjzhfyvp39jn26sd/IMG_3193.JPG?rlkey=y9beby70n0cjbn63pw28wpk7y&st=7jx11go6&raw=1",
+  "https://www.dropbox.com/scl/fi/whx3ksjzhfyvp39jn26sd/IMG_3193.JPG?rlkey=y9beby70n0cjbn63pw28wpk7y&st=l5g11r90&raw=1",
   "https://www.dropbox.com/scl/fi/oa20zxiw3y5fh7nk1z5u9/7B91CF55-19C2-4848-8FB6-6682BD580591.JPG?rlkey=mcdjt1fn0hmp91e8v5rfta1ts&st=d3uuwwg9&raw=1",
   "https://www.dropbox.com/scl/fi/3xkzquiw3cod38w4zrdih/IMG_3621.JPG?rlkey=d48yeyljc3ds94m51f6mf8ysl&st=91ophrns&raw=1"
 ];
 let currentIndex=0;
-img.addEventListener("click",()=>{
-  img.style.transition="transform 0.3s";
-  img.style.transform="scale(1.3)";
+img.addEventListener("click", () => {
+  // เปลี่ยนรูปทันที
+  currentIndex = (currentIndex + 1) % images.length;
+  img.src = images[currentIndex];
+
+  // scale animation
+  img.style.transition = "transform 0.3s";
+  img.style.transform = "scale(1.3)";
   setTimeout(()=>img.style.transform="scale(1)",300);
+
+  // flying hearts
   for(let i=0;i<5;i++){
     const heart=document.createElement("div");
     heart.className="click-heart";
@@ -138,8 +140,6 @@ img.addEventListener("click",()=>{
     document.body.appendChild(heart);
     heart.addEventListener("animationend",()=>heart.remove());
   }
-  currentIndex=(currentIndex+1)%images.length;
-  img.src=images[currentIndex];
 });
 
 // Show/hide secret
@@ -148,14 +148,10 @@ const secret=document.getElementById("secret");
 const nextBtn=document.getElementById("nextBtn");
 
 loveBtn.addEventListener("click",()=>{
-  // toggle secret content
   if(secret.classList.contains("show")){
-    // ซ่อนกลับ
     secret.classList.remove("show");
   } else {
-    // โชว์
     secret.classList.add("show");
-    // ซ่อน Go to Secret Page ก่อน
     nextBtn.style.display="none";
     setTimeout(()=>{ nextBtn.style.display="inline-block"; },8000);
   }
